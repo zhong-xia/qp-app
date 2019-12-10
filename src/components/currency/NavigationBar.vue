@@ -1,0 +1,95 @@
+<template>
+    <!-- 1.能力：具备默认的展示效果   左边：后退按钮的图标  中：页面名称 右：空白的内容
+         2.可通过插槽来配置具体的展示样式  左中右三个插槽，让父组件可以通过三个插槽来制定对应位置的布局
+         3.可以接收从外部指定的一个样式（可以在父组件中指定 navigationBar的style -->
+         <!-- <div class="nav-bar z-index-max"  :style="navBarStyle"
+            :class="[{'iphonex-top' : $store.state.isIphoneX},{'bottom-line' : pageName}]"> -->
+        <div class="nav-bar z-index-max"  :style="navBarStyle" :class="{'bottom-line':pageName}">
+             <!-- 左 -->
+             <div class="left" @click="$emit('onLeftClick')">
+                 <!-- 默认状态 -->
+                 <img v-if="isShowBack" src="../../assets/img/svg-icons/返回.svg"/>
+                <!-- 具名插槽 -->
+                <slot name="nav-left"></slot>
+             </div>
+             <!-- 中 -->
+             <div class="center">
+                 <!-- 默认状态 -->
+                 <!-- <span class="page-title" v-if="pageName">{{pageName}}</span> -->
+                  <span class="page-title" v-if="pageName">{{pageName}}</span>
+                 <!-- 具名插槽 -->
+                 <slot name="nav-center"></slot>
+             </div>
+             <!-- 右 -->
+             <div class="right">
+                 <!-- 具名插槽 -->
+                 <slot name="nav-right"></slot>
+             </div>
+         </div>
+</template>
+<script>
+export default {
+    props:{
+        // 页面标题名称
+        pageName:{
+            type:String,
+            default:''
+        },
+        // 是否展示后退按钮
+        isShowBack:{
+            type:Boolean,
+            default:true
+        },
+        // navBarStyle添加样式
+        navBarStyle:{
+            type:Object,
+            default:function(){
+                return{
+                    backgroundColor:'#fff'
+                }
+            }
+        }
+    }
+}
+</script>
+<style lang="scss" scoped>
+  @import '../../assets/css/style.scss';
+  .nav-bar{
+      width: 100%;
+      height:px2rem(44);
+      line-height: px2rem(44);
+      display: flex;
+      justify-content: space-between;
+
+
+        // 适配沉浸式手机 statusBar
+        padding-top: $statusBarHeight;
+
+
+
+      .left,.right{
+          display: flex;
+          height: 100%;
+          width:px2rem(26);
+          padding:0 $marginSize;
+
+          img{
+              width:100%;
+              align-self: center;
+          }
+      }
+      .center{
+          height: 100%;
+          display: flex;
+          flex-grow: 1;
+          .page-title{
+              font-size: $titleSize;
+              align-self: center;
+              margin:0 auto;
+          }
+      }
+  }
+  .bottom-line{
+      border-bottom: 1px solid #eee;
+  }
+</style>
